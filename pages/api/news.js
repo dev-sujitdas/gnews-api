@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
   try {
     const apiKey = process.env.GNEWS_API_KEY;
-    const api = `https://gnews.io/api/v4/top-headlines?category=general&lang=en&country=us&max=10&apikey=${apiKey}`;
+    const api = `https://api.mediastack.com/v1/news?access_key=${apiKey}&countries=za`;
 
     const response = await fetch(api);
     const data = await response.json();
