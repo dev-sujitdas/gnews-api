@@ -18,12 +18,12 @@ export default async function handler(req, res) {
 
   try {
     const apiKey = process.env.GNEWS_API_KEY;
-    const api = `https://api.mediastack.com/v1/news?access_key=${apiKey}&countries=za`;
+    const api = `https://gnews.io/api/v4/top-headlines?category=business&lang=en&country=za&max=10&apikey=${apiKey}`;
 
     const response = await fetch(api);
     const data = await response.json();
 
-    await redis.set("gnews:top", data, { ex: 900 }); // cache for 900s = 15 min
+    await redis.set("gnews:top", data, { ex: 900 });
 
     return res.status(200).json(data);
   } catch (error) {
