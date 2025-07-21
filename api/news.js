@@ -12,18 +12,14 @@ export default async function handler(req, res) {
   }
 
   try {
-   const response = await fetch(api);
-console.log("Status:", response.status);
-const data = await response.json();
-console.log("API response:", data);
-
-if (!response.ok) {
-  throw new Error("GNews API returned non-200 status");
-}
-
+    const cached = await redis.get("gnews:top");
+    if (cached) {
+      const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
+      return res.status(200).json({ source: "cache", data: parsed });
+    }
 
     const apiKey = process.env.GNEWS_API_KEY;
-    const api = `https://gnews.io/api/v4/top-headlines?category=general&lang=en&country=us&max=10&apikey=${apiKey}`;
+    const api = `https://gnews.io/api/v4/top-headlines?category=business&lang=en&country=za&max=10&apikey=${apiKey}`;
 
     const response = await fetch(api);
     const data = await response.json();
