@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
   const cached = await redis.get("gnews:top");
   if (cached) {
-    return res.status(200).json(cached);
+    return res.status(200).json({ source: "cache", ...cached });
   }
 
   try {
@@ -25,8 +25,9 @@ export default async function handler(req, res) {
 
     await redis.set("gnews:top", data, { ex: 900 });
 
-    return res.status(200).json(data);
+    return res.status(200).json({ source: "fresh", ...data });
   } catch (error) {
     return res.status(500).json({ error: "Failed to fetch news" });
   }
 }
+
